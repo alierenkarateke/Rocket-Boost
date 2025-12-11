@@ -54,6 +54,7 @@ public class Movement : MonoBehaviour
         }
     }
 
+
     private void StartThursting()
     {
         rb.AddRelativeForce(Vector3.up * thrustStrength * Time.fixedDeltaTime);
@@ -67,13 +68,13 @@ public class Movement : MonoBehaviour
         }
     }
 
+
     private void StopThursting()
     {
         audioSource.Stop();
         mainBoosterParticle.Stop();
     }
-
-    
+  
 
     private void ProcessRotation()
     {
@@ -91,12 +92,6 @@ public class Movement : MonoBehaviour
 
     }
 
-    private void ApplyRotation(float rotationThisFrame)
-    {
-        rb.freezeRotation = true;
-        transform.Rotate(Vector3.forward * rotationThisFrame * Time.fixedDeltaTime);
-        rb.freezeRotation = false;
-    }
 
     private void StartRotation(float rotationInput)
     {
@@ -104,24 +99,49 @@ public class Movement : MonoBehaviour
         if (rotationInput < 0)
         {
             ApplyRotation(rotationStrength);
-            if (!rightBoosterParticle.isPlaying)
-            {
-                leftBoosterParticle.Stop();
-                rightBoosterParticle.Play();
-            }
+            RotateRight();
         }
 
         else if (rotationInput > 0)
         {
             ApplyRotation(-rotationStrength);
-            if (!leftBoosterParticle.isPlaying)
-            {
-                rightBoosterParticle.Stop();
-                leftBoosterParticle.Play();
-            }
+            RotateLeft();
+        }
+        else
+        {
+            StopRotation();
         }
     }
-    
+
+
+    private void ApplyRotation(float rotationThisFrame)
+    {
+        rb.freezeRotation = true;
+        transform.Rotate(Vector3.forward * rotationThisFrame * Time.fixedDeltaTime);
+        rb.freezeRotation = false;
+    }
+
+
+    private void RotateLeft()
+    {
+        if (!leftBoosterParticle.isPlaying)
+        {
+            rightBoosterParticle.Stop();
+            leftBoosterParticle.Play();
+        }
+    }
+
+
+    private void RotateRight()
+    {
+        if (!rightBoosterParticle.isPlaying)
+        {
+            leftBoosterParticle.Stop();
+            rightBoosterParticle.Play();
+        }
+    }
+
+
     private void StopRotation()
     {
         rightBoosterParticle.Stop();

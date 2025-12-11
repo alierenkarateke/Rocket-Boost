@@ -1,6 +1,8 @@
 using System;
 using System.Linq.Expressions;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour
@@ -15,23 +17,30 @@ public class CollisionHandler : MonoBehaviour
     AudioSource audioSource;
 
     bool isControllable = true;
+    bool isCollidable = true;
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>(); 
     }
+
+    void Update()
+    {
+        RespondToDebugKeys();
+    }
+
     void OnCollisionEnter(UnityEngine.Collision collision)
     {
-        if(!isControllable){return; }
+        if(!isControllable || !isCollidable){return; }
 
         switch (collision.gameObject.tag)
         {
             case "Friendly":
-            Debug.Log("Friendly");
+            //Debug.Log("Friendly");
             break;
 
             case "Fuel":
-            Debug.Log("Fuel");
+            //Debug.Log("Fuel");
             break;
             
             case "Finish":
@@ -81,5 +90,19 @@ public class CollisionHandler : MonoBehaviour
         }
 
         SceneManager.LoadScene(nextScene);
+    }
+
+    void RespondToDebugKeys()
+    {
+        if (Keyboard.current.lKey.isPressed)
+        {
+            LoadNextLevel();
+            
+        }
+        else if (Keyboard.current.cKey.wasPressedThisFrame)
+        {
+            isCollidable = !isCollidable;
+            Debug.Log("c key pressed ");
+        }
     }
 }
